@@ -17,11 +17,11 @@
                             Tâches à faire
                         </h3>
                     </div>
-                    <div class="flex items-center justify-between p-1.5 border-b">
+                    <div class="flex items-center justify-between p-0 flex-wrap border-b">
                         @foreach($tasks as $task)
                             <div class="card">
                                 <div class="card-body p-5">
-                                    <div class="flex items-center justify-between flex-wrap gap-7.5">
+                                    <div class="flex items-center justify-end flex-wrap gap-7.5">
                                         <div class="flex items-center gap-2.5">
                                             <div class="border border-brand-clarity rounded-lg">
                                                 <div class="flex items-center justify-center border-b border-b-brand-clarity bg-brand-light rounded-t-lg">

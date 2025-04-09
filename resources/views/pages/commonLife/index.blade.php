@@ -30,19 +30,18 @@
                         Ajouter une tache commune
                     </h3>
                 </div>
-                <div class="card-body flex flex-col gap-5">
-                    <x-forms.input name="name" :label="__('Nom')" />
+                <form method ="POST" action="{{route('common-life')}}">
+                    @csrf
+                    <div class="card-body flex flex-col gap-5">
+                        <x-forms.input id="title" name="title" type="text" :label="__('Title')" />
 
-                    <x-forms.input name="description" :label="__('Description')" />
+                        <x-forms.input id="description"  name="description" type="text" :label="__('Description')" />
 
-                    <x-forms.input type="date" name="year" :label="__('Début de l\'année')" placeholder="" />
-
-                    <x-forms.input type="date" name="year" :label="__('Fin de l\'année')" placeholder="" />
-
-                    <x-forms.primary-button>
-                        {{ __('Valider') }}
-                    </x-forms.primary-button>
-                </div>
+                        <x-forms.primary-button type="submit">
+                            {{ __('Valider') }}
+                        </x-forms.primary-button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

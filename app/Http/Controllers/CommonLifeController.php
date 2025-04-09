@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\CommonLife;
+use App\Models\User;
+use App\Models\UserSchool;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,8 +12,17 @@ use Illuminate\Support\Facades\Auth;
 class CommonLifeController extends Controller
 {
     public function index() {
+        $user = Auth::user();
+        $id = $user->id;
+        $roleUser = UserSchool::where('user_id',$id)->get();
+        $role = $roleUser[0]->role;
         $tasks = CommonLife::where('done',0)->get();
-        return view('pages.commonLife.commonLife-admin', compact('tasks'));
+        if($role=="admin"){
+            return view('pages.commonLife.commonLife-admin', compact('tasks'));
+        }
+        else{
+            return view('pages.commonLife.commonLife-student', compact('tasks'));
+        }
     }
 
     public function done(){
@@ -19,13 +30,11 @@ class CommonLifeController extends Controller
     }
 
     public function create(request $request) {
-
         $user = Auth::user();
         $title = $request->input('title');
         $description = $request->input('description');
         $done = false;
         if($title == null || $description == null) {
-            $tasks = CommonLife::where('done',0)->get();
             return redirect()->route('common-life.index');
         }
         else{
@@ -35,9 +44,12 @@ class CommonLifeController extends Controller
             $CommonLife ->description = $description;
             $CommonLife ->done = $done;
             $CommonLife->save();
-            $tasks = CommonLife::where('done',0)->get();
             return redirect()->route('common-life.index');
         }
     }
-    public function delete(request $request) {}
+    public function delete(request $request) {
+        $id = $request->id;
+        $task = CommonLife::where('task_id',$id)->delete();
+        return redirect()->route('common-life.index');
+    }
 }

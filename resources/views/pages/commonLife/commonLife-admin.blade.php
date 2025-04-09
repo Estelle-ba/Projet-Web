@@ -13,25 +13,39 @@
             <div class="grid" >
                 <div class="card card-grid h-full min-w-full">
                     <div class="card-header">
-                        <h3 class="card-title">
-                            Tâches à faire
-                        </h3>
+                        @if(count($tasks) == 0)
+                            <h3 class="card-title">
+                                Aucune tâche
+                            </h3>
+                        @else
+                            <h3 class="card-title">
+                                Tâches à faire
+                            </h3>
+                        @endif
                     </div>
                     <div class="flex items-center justify-between p-0 flex-wrap border-b">
                         @foreach($tasks as $task)
                             <div class="card">
                                 <div class="card-body p-5">
-                                    <div class="flex items-center justify-end flex-wrap gap-7.5">
+                                    <div class="flex justify-end flex-wrap gap-7.5">
                                         <div class="flex items-center gap-2.5">
                                             <div class="border border-brand-clarity rounded-lg">
                                                 <div class="flex items-center justify-center border-b border-b-brand-clarity bg-brand-light rounded-t-lg">
                                                    <span class="text-3xs text-brand fw-medium p-1.5">
-                                                    Apr
+                                                       @php
+                                                           $time = $task->created_at;
+                                                           $dateShow = $time->format("M");
+                                                           echo($dateShow);
+                                                       @endphp
                                                    </span>
                                                 </div>
                                                 <div class="flex items-center justify-center size-9">
                                                    <span class="fw-semibold text-gray-900 text-md tracking-tight">
-                                                    12
+                                                        @php
+                                                            $time = $task->created_at;
+                                                            $dateShow = $time->format("d");
+                                                            echo($dateShow);
+                                                        @endphp
                                                    </span>
                                                 </div>
                                             </div>
@@ -39,21 +53,52 @@
                                                 <h3 class="card-title">
                                                     {{$task->title}}
                                                 </h3>
-                                                <a class="hover:text-primary-active font-medium text-gray-700 text-xs" href="#">
+                                                <a class="hover:text-primary-active font-medium text-gray-700 text-xs">
                                                     {{$task->description}}
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="flex item-center justify-end gap-2.5">
-                                        <button class="btn btn-light btn-sm" data-dismiss="#event_invitation" data-dismiss-mode="hide">
-                                            Supprimer
-                                        </button>
+                                        <form method ="POST" action="{{route('common-life.delete')}}">
+                                            @csrf
+                                            <input type="hidden" id="id" name="id" value="{{$task->task_id}}">
+                                            <button class="btn btn-light btn-sm" type="submit">
+                                                Supprimer
+                                            </button>
+                                        </form>
                                         <button class="btn btn-dark btn-sm">
                                             Modifier
                                         </button>
                                     </div>
                                 </div>
+
+                            </div>
+                            <div class=" fixed items-center justify-center-center card" id="{{$task->task_id}}">
+                                <div class="card-header">
+                                    <div class=" items-center justify-center border-b border-b-brand-clarity bg-brand-light rounded-t-lg">
+                                        <h3 class="card-title">
+                                            Modifier la tache : {{$task->title}} {{$task->task_id}}
+                                        </h3>
+                                    </div>
+                                    <div>
+                                        <span class="fw-semibold text-gray-900 text-md tracking-tight">
+                                            {{$task->description}}
+                                        </span>
+                                    </div>
+                                </div>
+                                <form method ="POST" action="{{route('common-life.create')}}">
+                                    @csrf
+                                    <div class="card-body flex flex-col gap-5">
+                                        <x-forms.input id="title" name="title" type="text" :label="__('Title')" />
+
+                                        <x-forms.input id="description"  name="description" type="text" :label="__('Description')" />
+
+                                        <x-forms.primary-button type="submit">
+                                            {{ __('Valider') }}
+                                        </x-forms.primary-button>
+                                    </div>
+                                </form>
                             </div>
                         @endforeach
                     </div>

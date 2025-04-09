@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('user_id')->references('id')->on('users');
             $table->string('title');
             $table->text('description');
+            $table->boolean('done');
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('living_task');
+        Schema::dropIfExists('CommonLife');
     }
 };

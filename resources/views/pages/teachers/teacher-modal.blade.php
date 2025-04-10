@@ -1,4 +1,4 @@
-@extends('layouts.modal', [
+@extends('components.modal', [
     'id'    => 'teacher-modal',
     'title'  => 'Informations enseignant',] )
 

@@ -1,3 +1,37 @@
+<style>
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+    }
+
+    .modal-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        width: 50%;
+        max-width: 600px;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+
+    .close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 30px;
+        cursor: pointer;
+    }
+</style>
 <x-app-layout>
     <x-slot name="header">
         <h1 class="flex items-center gap-1 text-sm font-normal">
@@ -6,8 +40,6 @@
             </span>
         </h1>
     </x-slot>
-
-    <!-- begin: grid -->
     <div class="grid lg:grid-cols-3 gap-5 lg:gap-7.5 items-stretch">
         <div class="lg:col-span-2">
             <div class="grid" >
@@ -67,46 +99,19 @@
                                                 Supprimer
                                             </button>
                                         </form>
-                                        <button class="btn btn-dark btn-sm">
+                                        <button class="btn btn-dark btn-sm" onclick="openModal({{$task->task_id}})">
                                             Modifier
                                         </button>
                                     </div>
                                 </div>
-
-                            </div>
-                            <div class=" fixed items-center justify-center-center card" id="{{$task->task_id}}">
-                                <div class="card-header">
-                                    <div class=" items-center justify-center border-b border-b-brand-clarity bg-brand-light rounded-t-lg">
-                                        <h3 class="card-title">
-                                            Modifier la tache : {{$task->title}} {{$task->task_id}}
-                                        </h3>
-                                    </div>
-                                    <div>
-                                        <span class="fw-semibold text-gray-900 text-md tracking-tight">
-                                            {{$task->description}}
-                                        </span>
-                                    </div>
-                                </div>
-                                <form method ="POST" action="{{route('common-life.create')}}">
-                                    @csrf
-                                    <div class="card-body flex flex-col gap-5">
-                                        <x-forms.input id="title" name="title" type="text" :label="__('Title')" />
-
-                                        <x-forms.input id="description"  name="description" type="text" :label="__('Description')" />
-
-                                        <x-forms.primary-button type="submit">
-                                            {{ __('Valider') }}
-                                        </x-forms.primary-button>
-                                    </div>
-                                </form>
                             </div>
                         @endforeach
                     </div>
-
                 </div>
             </div>
         </div>
 
+    <!-- Formulaire d'ajout -->
         <div class="lg:col-span-1">
             <div class="card h-full">
                 <div class="card-header">
@@ -118,9 +123,7 @@
                     @csrf
                     <div class="card-body flex flex-col gap-5">
                         <x-forms.input id="title" name="title" type="text" :label="__('Title')" />
-
                         <x-forms.input id="description"  name="description" type="text" :label="__('Description')" />
-
                         <x-forms.primary-button type="submit">
                             {{ __('Valider') }}
                         </x-forms.primary-button>
@@ -129,6 +132,31 @@
             </div>
         </div>
     </div>
-    </div>
-    <!-- end: grid -->
 </x-app-layout>
+@foreach($tasks as $task)
+    <div class="modal" id="{{$task->task_id}}" tabindex="-1" role="dialog" aria-labelledby="{{$task->task_id}}">
+        <div class="modal-dialog " role="document">
+            <div class="modal-content" >
+                <div class="modal-header">
+                    <h5 class="modal-title card-header" id="gridSystemModalLabel">AAAAAAAAAAAAA</h5>
+                    <button type="button" onclick="closeModal({{$task->task_id}})">Close</button>
+                </div>
+                <div class="modal-body">
+                    AAAAAAAAAAAAAAAAA
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="closeModal({{$task->task_id}})">Close</button>>
+                    <span>
+                        AAAAAAAAAA
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+@endforeach
+
+
+
+
+
+

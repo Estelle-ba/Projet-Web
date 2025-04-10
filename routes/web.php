@@ -47,6 +47,8 @@ Route::middleware('auth')->group(function () {
         Route::get('common-life', [CommonLifeController::class, 'index'])->name('common-life.index');
         Route::post('common-life-create', [CommonLifeController::class, 'create'])->name('common-life.create');
         Route::post('common-life-delete', [CommonLifeController::class, 'delete'])->name('common-life.delete');
+        Route::post('common-life-delete-user', [CommonLifeController::class, 'delete_user'])->name('common-life.delete-user');
+        Route::post('common-life-add-user', [CommonLifeController::class, 'add_user'])->name('common-life.add-user');
     });
 
 });

@@ -1,3 +1,4 @@
+
 <x-app-layout>
     <x-slot name="header">
         <h1 class="flex items-center gap-1 text-sm font-normal">
@@ -53,14 +54,14 @@
                                                 <h3 class="card-title">
                                                     {{$task->title}}
                                                 </h3>
-                                                <a class="hover:text-primary-active font-medium text-gray-700 text-xs">
+                                                <span class="font-medium text-gray-700 text-xs">
                                                     {{$task->description}}
-                                                </a>
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="flex item-center justify-end gap-2.5">
-                                        <form method ="POST">
+                                        <form method ="POST" action="{{route('common-life.add-user')}}">
                                             @csrf
                                             <input type="hidden" id="id" name="id" value="{{$task->task_id}}">
                                             <button class="btn btn-dark btn-sm" type="submit">
@@ -77,25 +78,43 @@
             </div>
         </div>
         <div class="lg:col-span-1">
-            <div class="card h-full">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        Ajouter une tache commune
+            @foreach($done as $task_done)
+            <div class=" lg:flex lg:flex-col lg:w-[300px] lg:rounded-xl lg:border" data-drawer="true" data-drawer-class="drawer drawer-start max-w-[90%] w-[300px]" data-drawer-enable="true|lg:false" id="drawer_3">
+                <div class="flex items-center justify-between p-5 border-b">
+                    <h3 class="text-base font-semibold text-gray-900">
+                        {{$task_done->title}}
                     </h3>
                 </div>
-                <form method ="POST" action="{{route('common-life.create')}}">
-                    @csrf
-                    <div class="card-body flex flex-col gap-5">
-                        <x-forms.input id="title" name="title" type="text" :label="__('Title')" />
-
-                        <x-forms.input id="description"  name="description" type="text" :label="__('Description')" />
-
-                        <x-forms.primary-button type="submit">
-                            {{ __('Valider') }}
-                        </x-forms.primary-button>
+                    <div class="p-5">
+                        Description :
                     </div>
-                </form>
+                    <div>
+                        <span class="font-medium text-gray-700 text-xs">
+                            {{$task_done->description}}
+                        </span>
+                    </div>
+                    <div class="p-5">
+                        Mon commentaire :
+                    </div>
+                    <div>
+                        <span class="font-medium text-gray-700 text-xs">
+                            {{$task_done->comments}}
+                        </span>
+                    </div>
+                <div class="flex item-center justify-end gap-2.5">
+                    <form method ="POST" action="{{route('common-life.delete-user')}}">
+                        @csrf
+                        <input type="hidden" id="id" name="id" value="{{$task_done->task_id}}">
+                        <button class="btn btn-light btn-sm" type="submit">
+                            Supprimer
+                        </button>
+                    </form>
+                    <button class="btn btn-dark btn-sm" onclick="openModal({{$task_done->task_id}})">
+                        Modifier
+                    </button>
+                </div>
             </div>
+            @endforeach
         </div>
 
     </div>

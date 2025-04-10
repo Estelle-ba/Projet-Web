@@ -124,7 +124,7 @@
                                     Supprimer
                                 </button>
                             </form>
-                            <button class="btn btn-dark btn-sm" onclick="openModal({{$task_done->task_id}})">
+                            <button class="btn btn-dark btn-sm" onclick="openModal('comment{{$task_done->task_id}}')">
                                 Modifier
                             </button>
                         </div>
@@ -168,28 +168,28 @@
         </div>
     </div>
 @endforeach
-@foreach($tasks as $task)
-    <div class="modal" id="{{$task->task_id}}" tabindex="-1" role="dialog" aria-labelledby="{{$task->task_id}}">
+@foreach($done as $task_done)
+    <div class="modal" id="comment{{$task_done->task_id}}" tabindex="-1" role="dialog" aria-labelledby="{{$task_done->task_id}}">
         <div class="modal-dialog " role="document">
             <div class="modal-content" >
                 <div class="modal-header">
-                    <h5 class="flex modal-title">Tâche {{$task->task_id}} : {{$task->title}}</h5>
+                    <h5 class="flex modal-title">Tâche {{$task_done->task_id}} : {{$task_done->title}}</h5>
                 </div>
                 <div class="modal-body">
-                    <h6>{{$task->description}}</h6>
+                    <h6>{{$task_done->description}}</h6>
+                    <p>Changer le commentaire</p>
                 </div>
-                <form method ="POST" action="{{route('common-life.modify')}}">
+                <form method ="POST" action="{{route('common-life.modify-comment')}}">
                     @csrf
                     <div class="card-body flex flex-col gap-5">
-                        <input type="hidden" id="id" name="id" value="{{$task->task_id}}">
-                        <x-forms.input id="title" name="title" type="text" :label="__('Title')" />
-                        <x-forms.input id="description"  name="description" type="text" :label="__('Description')" />
+                        <input type="hidden" id="id" name="id" value="{{$task_done->task_id}}">
+                        <x-forms.input id="comments" name="comments" type="text" :label="__('Commentaire')" />
                         <div class="flex item-center justify-end gap-2.5">
-                            <button class="flex btn btn-outline btn-danger" type="button" onclick="closeModal({{$task->task_id}})">
+                            <button class="flex btn btn-outline btn-danger" type="button" onclick="closeModal('comment{{$task_done->task_id}}')">
                                 Fermer
                             </button>
                             <button class="btn btn-dark btn-sm" type="submit">
-                                Modifier
+                                Terminer
                             </button>
                         </div>
                     </div>

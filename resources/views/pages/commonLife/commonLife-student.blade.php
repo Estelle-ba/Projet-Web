@@ -78,43 +78,64 @@
             </div>
         </div>
         <div class="lg:col-span-1">
-            @foreach($done as $task_done)
-            <div class=" lg:flex lg:flex-col lg:w-[300px] lg:rounded-xl lg:border" data-drawer="true" data-drawer-class="drawer drawer-start max-w-[90%] w-[300px]" data-drawer-enable="true|lg:false" id="drawer_3">
-                <div class="flex items-center justify-between p-5 border-b">
-                    <h3 class="text-base font-semibold text-gray-900">
-                        {{$task_done->title}}
-                    </h3>
+            <div class="card h-full">
+                <div class="card-header">
+                    @if(count($done) == 0)
+                        <h3 class="card-title">
+                            Aucune tâche terminée
+                        </h3>
+                    @else
+                        <h3 class="card-title">
+                            Tâches finies
+                        </h3>
+                    @endif
                 </div>
-                    <div class="p-5">
-                        Description :
+                <div class="lg:col-span-1">
+                    @foreach($done as $task_done)
+                    <div class=" lg:flex lg:flex-col lg:w-[300px] lg:rounded-xl lg:border" data-drawer="true" data-drawer-class="drawer drawer-start max-w-[90%] w-[300px]" data-drawer-enable="true|lg:false" id="drawer_3">
+                        <div class="flex items-center justify-between p-5 border-b">
+                            <h3 class="text-base font-semibold text-gray-900">
+                                {{$task_done->title}}
+                            </h3>
+                        </div>
+                            <div class="p-5">
+                                Description :
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-700 text-xs">
+                                    {{$task_done->description}}
+                                </span>
+                            </div>
+                            <div class="p-5">
+                                Mon commentaire :
+                            </div>
+                            <div>
+                                @if($task_done->comments == null)
+                                    <span class="font-medium text-gray-700 text-xs">
+                                        Aucun commentaire
+                                    </span>
+                                @else
+                                    <span class="font-medium text-gray-700 text-xs">
+                                        {{$task_done->comments}}
+                                    </span>
+                                @endif
+                            </div>
+                        <div class="flex item-center justify-end gap-2.5">
+                            <form method ="POST" action="{{route('common-life.delete-user')}}">
+                                @csrf
+                                <input type="hidden" id="id" name="id" value="{{$task_done->task_id}}">
+                                <button class="btn btn-light btn-sm" type="submit">
+                                    Supprimer
+                                </button>
+                            </form>
+                            <button class="btn btn-dark btn-sm" onclick="openModal({{$task_done->task_id}})">
+                                Modifier
+                            </button>
+                        </div>
                     </div>
-                    <div>
-                        <span class="font-medium text-gray-700 text-xs">
-                            {{$task_done->description}}
-                        </span>
-                    </div>
-                    <div class="p-5">
-                        Mon commentaire :
-                    </div>
-                    <div>
-                        <span class="font-medium text-gray-700 text-xs">
-                            {{$task_done->comments}}
-                        </span>
-                    </div>
-                <div class="flex item-center justify-end gap-2.5">
-                    <form method ="POST" action="{{route('common-life.delete-user')}}">
-                        @csrf
-                        <input type="hidden" id="id" name="id" value="{{$task_done->task_id}}">
-                        <button class="btn btn-light btn-sm" type="submit">
-                            Supprimer
-                        </button>
-                    </form>
-                    <button class="btn btn-dark btn-sm" onclick="openModal({{$task_done->task_id}})">
-                        Modifier
-                    </button>
+                    @endforeach
                 </div>
             </div>
-            @endforeach
         </div>
 
     </div>

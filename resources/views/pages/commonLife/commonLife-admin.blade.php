@@ -1,37 +1,4 @@
-<style>
-    .modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 9999;
-    }
 
-    .modal-content {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: white;
-        padding: 20px;
-        border-radius: 5px;
-        width: 50%;
-        max-width: 600px;
-        max-height: 80vh;
-        overflow-y: auto;
-    }
-
-    .close {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-size: 30px;
-        cursor: pointer;
-    }
-</style>
 <x-app-layout>
     <x-slot name="header">
         <h1 class="flex items-center gap-1 text-sm font-normal">
@@ -133,22 +100,27 @@
         </div>
     </div>
 </x-app-layout>
+
 @foreach($tasks as $task)
     <div class="modal" id="{{$task->task_id}}" tabindex="-1" role="dialog" aria-labelledby="{{$task->task_id}}">
         <div class="modal-dialog " role="document">
             <div class="modal-content" >
                 <div class="modal-header">
-                    <h5 class="modal-title card-header" id="gridSystemModalLabel">AAAAAAAAAAAAA</h5>
-                    <button type="button" onclick="closeModal({{$task->task_id}})">Close</button>
+                    <h5 class="flex modal-title">Tâche {{$task->task_id}} : {{$task->title}}</h5>
                 </div>
                 <div class="modal-body">
-                    AAAAAAAAAAAAAAAAA
+                    <h6>Tâche {{$task->task_id}} : {{$task->title}}</h6>
+                    <p>{{$task->description}}</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" onclick="closeModal({{$task->task_id}})">Close</button>>
-                    <span>
-                        AAAAAAAAAA
-                    </span>
+                    <div class="flex item-center justify-end gap-2.5">
+                        <button class="flex btn btn-outline btn-danger" type="button" onclick="closeModal({{$task->task_id}})">
+                            Fermer
+                        </button>
+                        <button class="btn btn-dark btn-sm">
+                            Modifier
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

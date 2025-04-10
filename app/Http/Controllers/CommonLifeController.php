@@ -32,8 +32,8 @@ class CommonLifeController extends Controller
 
     public function create(request $request) {
         $user = Auth::user();
-        $title = $request->input('title');
-        $description = $request->input('description');
+        $title = $request->title;
+        $description = $request->description;
         if($title == null || $description == null) {
             return redirect()->route('common-life.index');
         }
@@ -43,7 +43,7 @@ class CommonLifeController extends Controller
             $CommonLife ->title = $title;
             $CommonLife ->description = $description;
             $CommonLife ->done = false;
-            $CommonLife->effectuate_by_id = Null;
+            $CommonLife->effectuate_by_id = 0;
             $CommonLife->comments = Null;
             $CommonLife->save();
             return redirect()->route('common-life.index');
@@ -67,6 +67,21 @@ class CommonLifeController extends Controller
         $id = $request->id;
         $task = CommonLife::where('task_id',$id);
         $task->update(['done'=>0, 'effectuate_by_id' => 0, 'comments' => Null]);
+        return redirect()->route('common-life.index');
+    }
+
+    public function modify_task(request $request) {
+        $id = $request->id;
+        $title = $request->title;
+        $description = $request->description;
+        $task = CommonLife::where('task_id',$id)->firstOrFail();
+        if($title == null) {
+            $title = $task->title;
+        }
+        if($description == null) {
+            $description = $task->description;
+        }
+        $task->update(['title'=>$title, 'description' => $description]);
         return redirect()->route('common-life.index');
     }
 }

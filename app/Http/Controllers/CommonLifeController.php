@@ -57,10 +57,11 @@ class CommonLifeController extends Controller
 
     public function add_user(request $request) {
         $id = $request->id;
+        $comments = $request->comments;
         $user = Auth::user();
         $id_user = $user->id;
         $task = CommonLife::where('task_id',$id);
-        $task->update(['done'=>1, 'effectuate_by_id' => $id_user]);
+        $task->update(['done'=>1, 'effectuate_by_id' => $id_user, 'comments' => $comments]);
         return redirect()->route('common-life.index');
     }
     public function delete_user(request $request) {
@@ -82,6 +83,14 @@ class CommonLifeController extends Controller
             $description = $task->description;
         }
         $task->update(['title'=>$title, 'description' => $description]);
+        return redirect()->route('common-life.index');
+    }
+
+    public function modify_comment(request $request) {
+        $id = $request->id;
+        $comments = $request->comments;
+        $task = CommonLife::where('task_id',$id)->firstOrFail();
+        $task->update(['comments' => $comments]);
         return redirect()->route('common-life.index');
     }
 }

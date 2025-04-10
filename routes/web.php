@@ -50,6 +50,7 @@ Route::middleware('auth')->group(function () {
         Route::post('common-life-delete-user', [CommonLifeController::class, 'delete_user'])->name('common-life.delete-user');
         Route::post('common-life-add-user', [CommonLifeController::class, 'add_user'])->name('common-life.add-user');
         Route::post('common-life-modify', [CommonLifeController::class, 'modify_task'])->name('common-life.modify');
+        Route::post('common-life-modify', [CommonLifeController::class, 'modify_task'])->name('common-life.modify');
     });
 
 });

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('comment_common_task', function (Blueprint $table) {
             $table->id();
-            $table->text('comment');
+            $table->text('comment')->nullable();
             $table->foreignId('user_id')->references('id')->on('users');
             $table->String('title');
             $table->text('description');

@@ -9,6 +9,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\KnowledgeController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\CommentTaskController;
 use Illuminate\Support\Facades\Route;
 
 // Redirect the root path to /dashboard
@@ -47,10 +48,12 @@ Route::middleware('auth')->group(function () {
         Route::get('common-life', [CommonLifeController::class, 'index'])->name('common-life.index');
         Route::post('common-life-create', [CommonLifeController::class, 'create'])->name('common-life.create');
         Route::post('common-life-delete', [CommonLifeController::class, 'delete'])->name('common-life.delete');
-        Route::post('common-life-delete-user', [CommonLifeController::class, 'delete_user'])->name('common-life.delete-user');
-        Route::post('common-life-add-user', [CommonLifeController::class, 'add_user'])->name('common-life.add-user');
         Route::post('common-life-modify', [CommonLifeController::class, 'modify_task'])->name('common-life.modify');
-        Route::post('common-life-modify-comment', [CommonLifeController::class, 'modify_comment'])->name('common-life.modify-comment');
+
+        //Comment Common Life
+        Route::post('comment-add', [CommentTaskController::class, 'addComment'])->name('comment-add');
+        Route::post('comment-modify', [CommentTaskController::class, 'modifyComment'])->name('comment-modify');
+        Route::post('comment-delete', [CommentTaskController::class, 'deleteComment'])->name('comment-delete');
     });
 
 });

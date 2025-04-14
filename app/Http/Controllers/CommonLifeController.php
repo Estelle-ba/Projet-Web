@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\CommonLife;
-use App\Models\User;
 use App\Models\UserSchool;
-
+use App\Models\comment_common_task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,8 +15,8 @@ class CommonLifeController extends Controller
         $id = $user->id;
         $roleUser = UserSchool::where('user_id',$id)->get();
         $role = $roleUser[0]->role;
-        $tasks = CommonLife::where('done',0)->get();
-        $done = CommonLife::where('done',1)->get();
+        $tasks = CommonLife::all();
+        $done = comment_common_task::where('user_id',$id)->get();
         if($role=="admin"){
             return view('pages.commonLife.commonLife-admin', compact('tasks'));
         }
@@ -42,9 +41,6 @@ class CommonLifeController extends Controller
             $CommonLife ->user_id = $user -> id;
             $CommonLife ->title = $title;
             $CommonLife ->description = $description;
-            $CommonLife ->done = false;
-            $CommonLife->effectuate_by_id = 0;
-            $CommonLife->comments = Null;
             $CommonLife->save();
             return redirect()->route('common-life.index');
         }
@@ -52,22 +48,6 @@ class CommonLifeController extends Controller
     public function delete(request $request) {
         $id = $request->id;
         $task = CommonLife::where('task_id',$id)->delete();
-        return redirect()->route('common-life.index');
-    }
-
-    public function add_user(request $request) {
-        $id = $request->id;
-        $comments = $request->comments;
-        $user = Auth::user();
-        $id_user = $user->id;
-        $task = CommonLife::where('task_id',$id);
-        $task->update(['done'=>1, 'effectuate_by_id' => $id_user, 'comments' => $comments]);
-        return redirect()->route('common-life.index');
-    }
-    public function delete_user(request $request) {
-        $id = $request->id;
-        $task = CommonLife::where('task_id',$id);
-        $task->update(['done'=>0, 'effectuate_by_id' => 0, 'comments' => Null]);
         return redirect()->route('common-life.index');
     }
 
@@ -83,14 +63,6 @@ class CommonLifeController extends Controller
             $description = $task->description;
         }
         $task->update(['title'=>$title, 'description' => $description]);
-        return redirect()->route('common-life.index');
-    }
-
-    public function modify_comment(request $request) {
-        $id = $request->id;
-        $comments = $request->comments;
-        $task = CommonLife::where('task_id',$id)->firstOrFail();
-        $task->update(['comments' => $comments]);
         return redirect()->route('common-life.index');
     }
 }

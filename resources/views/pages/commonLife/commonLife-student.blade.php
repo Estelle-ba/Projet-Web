@@ -89,8 +89,8 @@
                     @foreach($done as $task_done)
                     <div class="mb-4 lg:flex lg:flex-col lg:w-[300px] lg:rounded-xl lg:border" data-drawer="true" data-drawer-class="drawer drawer-start max-w-[90%] w-[300px]" data-drawer-enable="true|lg:false" id="drawer_3">
                         <div data-accordion="true">
-                            <div class="accordion-item [&:not(:last-child)]:border-b badge-outline badge-success border-b-gray-200" data-accordion-item="true" id="accordion_item_{{$task_done->task_id}}">
-                                <button class="accordion-toggle py-4 group flex items-center justify-between p-5 border-b" data-accordion-toggle="#accordion_content_{{$task_done->task_id}}">
+                            <div class="accordion-item [&:not(:last-child)]:border-b badge-outline badge-success border-b-gray-200" data-accordion-item="true" id="accordion_item_{{$task_done->id}}">
+                                <button class="accordion-toggle py-4 group flex items-center justify-between p-5 border-b" data-accordion-toggle="#accordion_content_{{$task_done->id}}">
                                     <span class="text-base text-gray-900 font-medium">
                                         {{$task_done->title}}
                                     </span>
@@ -99,7 +99,7 @@
                                     <i class="ki-outline ki-minus text-gray-600 text-2sm accordion-active:block hidden">
                                     </i>
                                 </button>
-                            <div class="accordion-content hidden" id="accordion_content_{{$task_done->task_id}}">
+                            <div class="accordion-content hidden" id="accordion_content_{{$task_done->id}}">
                                 <div class="text-gray-700 text-md pb-4">
                                     <div class="p-5">
                                         Description :
@@ -112,26 +112,26 @@
                                     <div class="p-5">
                                         Mon commentaire :
                                         <div>
-                                            @if($task_done->comments == null)
+                                            @if($task_done->comment == null)
                                                 <span class="font-medium text-gray-700 text-xs">
                                                 Aucun commentaire
                                             </span>
                                             @else
                                                 <span class="font-medium text-gray-700 text-xs">
-                                                {{$task_done->comments}}
+                                                {{$task_done->comment}}
                                             </span>
                                             @endif
                                         </div>
                                     </div>
                                     <div class="flex item-center justify-end gap-2.5 flex-wrap">
-                                        <form method ="POST" action="{{route('common-life.delete-user')}}">
+                                        <form method ="POST" action="{{route('comment-delete')}}">
                                             @csrf
-                                            <input type="hidden" id="id" name="id" value="{{$task_done->task_id}}">
+                                            <input type="hidden" id="id" name="id" value="{{$task_done->id}}">
                                             <button class="flex btn btn-danger" type="submit">
                                                 Supprimer
                                             </button>
                                         </form>
-                                        <button class="btn btn-primary" onclick="openModal('comment{{$task_done->task_id}}')">
+                                        <button class="btn btn-primary" onclick="openModal('comment{{$task_done->id}}')">
                                             Modifier
                                         </button>
                                     </div>
@@ -158,11 +158,12 @@
                     <h6>{{$task->description}}</h6>
                     <p>Ajouter un commentaire</p>
                 </div>
-                <form method ="POST" action="{{route('common-life.add-user')}}">
+                <form method ="POST" action="{{route('comment-add')}}">
                     @csrf
                     <div class="card-body flex flex-col gap-5">
-                        <input type="hidden" id="id" name="id" value="{{$task->task_id}}">
-                        <x-forms.input id="comments" name="comments" type="text" :label="__('Commentaire')" />
+                        <input type="hidden" id="title" name="title" value="{{$task->title}}">
+                        <input type="hidden" id="description" name="description" value="{{$task->description}}">
+                        <x-forms.input id="comment" name="comment" type="text" :label="__('Commentaire')" />
                         <div class="flex item-center justify-end gap-2.5">
                             <button class="flex btn btn-outline btn-danger" type="button" onclick="closeModal('done{{$task->task_id}}')">
                                 Fermer
@@ -179,7 +180,7 @@
     </div>
 @endforeach
 @foreach($done as $task_done)
-    <div class="modal" id="comment{{$task_done->task_id}}" tabindex="-1" role="dialog" aria-labelledby="{{$task_done->task_id}}">
+    <div class="modal" id="comment{{$task_done->id}}" tabindex="-1" role="dialog" aria-labelledby="{{$task_done->id}}">
         <div class="modal-dialog " role="document">
             <div class="modal-content" >
                 <div class="modal-header">
@@ -189,13 +190,13 @@
                     <h6>{{$task_done->description}}</h6>
                     <p>Changer le commentaire</p>
                 </div>
-                <form method ="POST" action="{{route('common-life.modify-comment')}}">
+                <form method ="POST" action="{{route('comment-modify')}}">
                     @csrf
                     <div class="card-body flex flex-col gap-5">
-                        <input type="hidden" id="id" name="id" value="{{$task_done->task_id}}">
-                        <x-forms.input id="comments" name="comments" type="text" :label="__('Commentaire')" />
+                        <input type="hidden" id="id" name="id" value="{{$task_done->id}}">
+                        <x-forms.input id="comment" name="comment" type="text" :label="__('Commentaire')" />
                         <div class="flex item-center justify-end gap-2.5">
-                            <button class="flex btn btn-outline btn-danger" type="button" onclick="closeModal('comment{{$task_done->task_id}}')">
+                            <button class="flex btn btn-outline btn-danger" type="button" onclick="closeModal('comment{{$task_done->id}}')">
                                 Fermer
                             </button>
                             <button class="btn btn-primary" type="submit">

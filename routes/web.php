@@ -11,6 +11,7 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\CommentTaskController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AssistantController;
 
 // Redirect the root path to /dashboard
 Route::redirect('/', 'dashboard');
@@ -54,6 +55,14 @@ Route::middleware('auth')->group(function () {
         Route::post('comment-add', [CommentTaskController::class, 'addComment'])->name('comment-add');
         Route::post('comment-modify', [CommentTaskController::class, 'modifyComment'])->name('comment-modify')->middleware('can:modify,App\Models\CommentTask');
         Route::post('comment-delete', [CommentTaskController::class, 'deleteComment'])->name('comment-delete')->middleware('can:modify,App\Models\CommentTask');
+
+        // api.test
+        Route::post('/assistant', [AssistantController::class, 'generateAssistantsResponse']);
+        Route::get('/generate-aritcle', function () {
+            return view('generate-aritcle');
+        });
+        Route::post('/generate-article', [AssistantController::class, 'generateArticle'])->name('generateArticle');
+        Route::post('/generate-text', [AssistantController::class, 'generateText']);
     });
 
 });

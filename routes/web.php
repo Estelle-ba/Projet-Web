@@ -46,14 +46,14 @@ Route::middleware('auth')->group(function () {
 
         // Common life
         Route::get('common-life', [CommonLifeController::class, 'index'])->name('common-life.index');
-        Route::post('common-life-create', [CommonLifeController::class, 'create'])->name('common-life.create');
+        Route::post('common-life-create', [CommonLifeController::class, 'create'])->name('common-life.create')->middleware('can:create,App\Models\CommonLife');
         Route::post('common-life-delete', [CommonLifeController::class, 'delete'])->name('common-life.delete');
         Route::post('common-life-modify', [CommonLifeController::class, 'modify_task'])->name('common-life.modify');
 
         //Comment Common Life
         Route::post('comment-add', [CommentTaskController::class, 'addComment'])->name('comment-add');
-        Route::post('comment-modify', [CommentTaskController::class, 'modifyComment'])->name('comment-modify');
-        Route::post('comment-delete', [CommentTaskController::class, 'deleteComment'])->name('comment-delete');
+        Route::post('comment-modify', [CommentTaskController::class, 'modifyComment'])->name('comment-modify')->middleware('can:modify,App\Models\CommentTask');
+        Route::post('comment-delete', [CommentTaskController::class, 'deleteComment'])->name('comment-delete')->middleware('can:modify,App\Models\CommentTask');
     });
 
 });

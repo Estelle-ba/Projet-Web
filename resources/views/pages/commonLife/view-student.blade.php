@@ -58,7 +58,7 @@
         </div>
     </div>
 </div>
-
+@include('pages.commonLife.modal-add-comment')
 
 
 

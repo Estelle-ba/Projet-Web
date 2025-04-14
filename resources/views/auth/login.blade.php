@@ -21,7 +21,7 @@
 
             <!-- Password -->
             <x-forms.input label="{{ __('Password') }}" name="password" :placeholder="__('Enter Password')"
-                           :value="old('email')" type="password" :resetLink="true"
+                           :value="old('password')" type="password" :resetLink="true"
                            :messages="$errors->get('password')"/>
 
             <!-- Remember Me -->

@@ -65,7 +65,7 @@
         </div>
     </div>
 </div>
-
+@include('pages.commonLife.modal-modify-comon-task')
 
 
 

@@ -15,7 +15,11 @@
             <div class="accordion-item [&:not(:last-child)]:border-b badge-outline badge-success border-b-gray-200" data-accordion-item="true" id="accordion_item_{{$task_done->id}}">
                 <button class="accordion-toggle py-4 group flex items-center justify-between p-5 border-b" data-accordion-toggle="#accordion_content_{{$task_done->id}}">
                                     <span class="text-base text-gray-900 font-medium">
-                                        {{$task_done->title}}
+                                        @php
+                                            $time = $task_done->created_at;
+                                            $dateShow = $time->format("d/m/Y");
+                                        @endphp
+                                        {{$task_done->title}} fait le {{$dateShow}}
                                     </span>
                     <i class="ki-outline ki-plus text-gray-600 text-2sm accordion-active:hidden block">
                     </i>
@@ -64,4 +68,4 @@
         </div>
     </div>
 @endforeach
-
+@include('pages.commonLife.modal-modify-comment')

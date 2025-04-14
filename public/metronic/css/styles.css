@@ -10403,3 +10403,17 @@ html.dark .\[html\.dark_\&\]\:block {
 html.dark .\[html\.dark_\&\]\:hidden {
   display: none;
 }
+.task_blocs{
+    width: 33.33%;
+    border: var(--tw-card-border);
+    border-radius: 0.375rem;
+
+    .date{
+        display: flex;
+        justify-content: center;
+    }
+
+    .task-title{
+        font-size : 100%;
+    }
+}

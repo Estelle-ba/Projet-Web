@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('CommonLife', function (Blueprint $table) {
-            $table->integer('effectuate_by_id')->nullable();
-            $table->text('comments')->nullable();
+            $table->dropColumn('done');
         });
+
     }
 
     /**

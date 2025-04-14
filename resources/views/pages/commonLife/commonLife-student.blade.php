@@ -26,12 +26,12 @@
                     </div>
                     <div class="flex items-center justify-between p-0 flex-wrap border-b">
                         @foreach($tasks as $task)
-                            <div class="card">
+                            <div class="task_blocs">
                                 <div class="card-body p-5">
-                                    <div class="flex justify-end flex-wrap gap-7.5">
+                                    <div class="flex justify-start flex-wrap gap-7.5">
                                         <div class="flex items-center gap-2.5">
                                             <div class="border border-brand-clarity rounded-lg">
-                                                <div class="flex items-center justify-center border-b border-b-brand-clarity bg-brand-light rounded-t-lg">
+                                                <div class="date">
                                                    <span class="text-3xs text-brand fw-medium p-1.5">
                                                        @php
                                                            $time = $task->created_at;
@@ -51,9 +51,9 @@
                                                 </div>
                                             </div>
                                             <div class="flex flex-col gap-1.5">
-                                                <h3 class="card-title">
+                                                <p class="task-title">
                                                     {{$task->title}}
-                                                </h3>
+                                                </p>
                                                 <span class="font-medium text-gray-700 text-xs">
                                                     {{$task->description}}
                                                 </span>
@@ -61,7 +61,7 @@
                                         </div>
                                     </div>
                                     <div class="flex item-center justify-end gap-2.5">
-                                        <button class="btn btn-dark btn-sm" onclick="openModal('done{{$task->task_id}}')">
+                                        <button class="btn btn-primary" onclick="openModal('done{{$task->task_id}}')">
                                             Terminer
                                         </button>
                                     </div>
@@ -86,51 +86,61 @@
                         </h3>
                     @endif
                 </div>
-                <div class="lg:col-span-1">
                     @foreach($done as $task_done)
-                    <div class=" lg:flex lg:flex-col lg:w-[300px] lg:rounded-xl lg:border" data-drawer="true" data-drawer-class="drawer drawer-start max-w-[90%] w-[300px]" data-drawer-enable="true|lg:false" id="drawer_3">
-                        <div class="flex items-center justify-between p-5 border-b">
-                            <h3 class="text-base font-semibold text-gray-900">
-                                {{$task_done->title}}
-                            </h3>
-                        </div>
-                            <div class="p-5">
-                                Description :
-                            </div>
-                            <div>
-                                <span class="font-medium text-gray-700 text-xs">
-                                    {{$task_done->description}}
-                                </span>
-                            </div>
-                            <div class="p-5">
-                                Mon commentaire :
-                            </div>
-                            <div>
-                                @if($task_done->comments == null)
-                                    <span class="font-medium text-gray-700 text-xs">
-                                        Aucun commentaire
+                    <div class="mb-4 lg:flex lg:flex-col lg:w-[300px] lg:rounded-xl lg:border" data-drawer="true" data-drawer-class="drawer drawer-start max-w-[90%] w-[300px]" data-drawer-enable="true|lg:false" id="drawer_3">
+                        <div data-accordion="true">
+                            <div class="accordion-item [&:not(:last-child)]:border-b badge-outline badge-success border-b-gray-200" data-accordion-item="true" id="accordion_item_{{$task_done->task_id}}">
+                                <button class="accordion-toggle py-4 group flex items-center justify-between p-5 border-b" data-accordion-toggle="#accordion_content_{{$task_done->task_id}}">
+                                    <span class="text-base text-gray-900 font-medium">
+                                        {{$task_done->title}}
                                     </span>
-                                @else
-                                    <span class="font-medium text-gray-700 text-xs">
-                                        {{$task_done->comments}}
-                                    </span>
-                                @endif
-                            </div>
-                        <div class="flex item-center justify-end gap-2.5">
-                            <form method ="POST" action="{{route('common-life.delete-user')}}">
-                                @csrf
-                                <input type="hidden" id="id" name="id" value="{{$task_done->task_id}}">
-                                <button class="btn btn-light btn-sm" type="submit">
-                                    Supprimer
+                                    <i class="ki-outline ki-plus text-gray-600 text-2sm accordion-active:hidden block">
+                                    </i>
+                                    <i class="ki-outline ki-minus text-gray-600 text-2sm accordion-active:block hidden">
+                                    </i>
                                 </button>
-                            </form>
-                            <button class="btn btn-dark btn-sm" onclick="openModal('comment{{$task_done->task_id}}')">
-                                Modifier
-                            </button>
+                            <div class="accordion-content hidden" id="accordion_content_{{$task_done->task_id}}">
+                                <div class="text-gray-700 text-md pb-4">
+                                    <div class="p-5">
+                                        Description :
+                                        <div>
+                                            <span class="font-medium text-gray-700 text-xs">
+                                                {{$task_done->description}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="p-5">
+                                        Mon commentaire :
+                                        <div>
+                                            @if($task_done->comments == null)
+                                                <span class="font-medium text-gray-700 text-xs">
+                                                Aucun commentaire
+                                            </span>
+                                            @else
+                                                <span class="font-medium text-gray-700 text-xs">
+                                                {{$task_done->comments}}
+                                            </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="flex item-center justify-end gap-2.5 flex-wrap">
+                                        <form method ="POST" action="{{route('common-life.delete-user')}}">
+                                            @csrf
+                                            <input type="hidden" id="id" name="id" value="{{$task_done->task_id}}">
+                                            <button class="flex btn btn-danger" type="submit">
+                                                Supprimer
+                                            </button>
+                                        </form>
+                                        <button class="btn btn-primary" onclick="openModal('comment{{$task_done->task_id}}')">
+                                            Modifier
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    @endforeach
                 </div>
+                @endforeach
             </div>
         </div>
 
@@ -157,7 +167,7 @@
                             <button class="flex btn btn-outline btn-danger" type="button" onclick="closeModal('done{{$task->task_id}}')">
                                 Fermer
                             </button>
-                            <button class="btn btn-dark btn-sm" type="submit">
+                            <button class="btn btn-primary" type="submit">
                                 Terminer
                             </button>
                         </div>
@@ -188,7 +198,7 @@
                             <button class="flex btn btn-outline btn-danger" type="button" onclick="closeModal('comment{{$task_done->task_id}}')">
                                 Fermer
                             </button>
-                            <button class="btn btn-dark btn-sm" type="submit">
+                            <button class="btn btn-primary" type="submit">
                                 Terminer
                             </button>
                         </div>

@@ -24,9 +24,9 @@
                     </div>
                     <div class="flex items-center justify-between p-0 flex-wrap border-b">
                         @foreach($tasks as $task)
-                            <div class="card">
+                            <div class="task_blocs" >
                                 <div class="card-body p-5">
-                                    <div class="flex justify-end flex-wrap gap-7.5">
+                                    <div class="flex justify-start flex-wrap gap-7.5">
                                         <div class="flex items-center gap-2.5">
                                             <div class="border border-brand-clarity rounded-lg">
                                                 <div class="flex items-center justify-center border-b border-b-brand-clarity bg-brand-light rounded-t-lg">
@@ -58,15 +58,15 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="flex item-center justify-end gap-2.5">
+                                    <div class="flex item-center justify-end gap-2.5 flex-wrap">
                                         <form method ="POST" action="{{route('common-life.delete')}}">
                                             @csrf
                                             <input type="hidden" id="id" name="id" value="{{$task->task_id}}">
-                                            <button class="btn btn-light btn-sm" type="submit">
+                                            <button class="btn btn-outline btn-danger" type="submit">
                                                 Supprimer
                                             </button>
                                         </form>
-                                        <button class="btn btn-dark btn-sm" onclick="openModal({{$task->task_id}})">
+                                        <button class="btn btn-primary" onclick="openModal({{$task->task_id}})">
                                             Modifier
                                         </button>
                                     </div>
@@ -121,7 +121,7 @@
                             <button class="flex btn btn-outline btn-danger" type="button" onclick="closeModal({{$task->task_id}})">
                                 Fermer
                             </button>
-                            <button class="btn btn-dark btn-sm" type="submit">
+                            <button class="btn btn-primary" type="submit">
                                 Modifier
                             </button>
                         </div>

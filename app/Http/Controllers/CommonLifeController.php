@@ -14,15 +14,9 @@ class CommonLifeController extends Controller
         $user = Auth::user();
         $id = $user->id;
         $roleUser = UserSchool::where('user_id',$id)->get();
-        $role = $roleUser[0]->role;
         $tasks = CommonLife::all();
         $done = comment_common_task::where('user_id',$id)->get();
-        if($role=="admin"){
-            return view('pages.commonLife.commonLife-admin', compact('tasks'));
-        }
-        else{
-            return view('pages.commonLife.commonLife-student', compact('tasks','done'));
-        }
+        return view('pages.commonLife.index', compact('tasks','done'));
     }
 
     public function done(){

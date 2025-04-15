@@ -36,8 +36,8 @@
             <option value="Typescript">Typescript</option>
             <option value="Visual Basic">Visual Basic</option>
         </select>
-        <x-forms.input name="question" type="number"> </x-forms.input>
-        <x-forms.input name="answer" type="number"> </x-forms.input>
+        <x-forms.input name="question" type="number" :label="__('Nombre de questions')"> </x-forms.input>
+        <x-forms.input name="answer" type="number" :label="__('Nombre de réponses')"> </x-forms.input>
         <button type="submit">Generate</button>
     </form>
 

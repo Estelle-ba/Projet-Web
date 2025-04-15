@@ -57,11 +57,6 @@ Route::middleware('auth')->group(function () {
         Route::post('comment-delete', [CommentTaskController::class, 'deleteComment'])->name('comment-delete')->middleware('can:modify,App\Models\CommentTask');
 
         // api.test
-        Route::post('/assistant', [AssistantController::class, 'generateAssistantsResponse']);
-        Route::get('/generate-aritcle', function () {
-            return view('generate-aritcle');
-        });
-        Route::post('/generate-article', [AssistantController::class, 'generateArticle'])->name('generateArticle');
         Route::post('/generate-text', [AssistantController::class, 'generateText']);
     });
 

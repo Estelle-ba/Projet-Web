@@ -4,16 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use App\Models\Questions;
+use function Webmozart\Assert\Tests\StaticAnalysis\null;
 
 class AssistantController extends Controller
 {
     public function generateText(Request $request)
     {
         $question = $request->question;
-        $langage = $request->langage;
+        $language = $request->language;
         $answer = $request->answer;
 
-        $prompt = "Génère un questionnaire à choix multiple (QCM) sur le langage de programmation : $langage.
+        $prompt = "Génère un questionnaire à choix multiple (QCM) sur le langage de programmation : $language.
         Le questionnaire doit comporter $question questions, réparties en trois catégories de difficulté :
         - 30% de questions simples,
         - 40% de questions moyennes,
@@ -26,42 +28,82 @@ class AssistantController extends Controller
 
         [
             {
-                \"question_number\": 1,
-                \"question_text\": \"Texte de la question\",
-                \"answer_option_A\": \"Option A\",
-                \"answer_option_B\": \"Option B\",
-                \"answer_option_C\": \"Option C\",
-                \"answer_option_D\": \"Option D\",
-                \"correct_answer\": \"A\"
-            },
+                \"question_number\": 10,
+                \"question_text\": \"Quel est le nom du package de la gestion des exceptions de contrat d\'Ada?\",
+                \"answer_options\": {
+                  \"A\": \"Ada.Contracts.Exception\",
+                  \"B\": \"Ada.Exceptions.Contract\",
+                  \"C\": \"Ada.Contracts_Exceptions\",
+                  \"D\": \"Ada.Contracts_Handling\"
+                },
+                \"correct_answer\": \"C\"
+              }
             ...
         ]
 
         N’inclus **aucun texte explicatif**, ni balise Markdown, ni introduction, ni conclusion. Seulement du JSON brut.";
         $apiKey = config(key:'mistral.api_key');
+        try {
+            // Send the prompt to the Mistral API
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $apiKey,
+                'Content-Type' => 'application/json',
+            ])->post('https://api.mistral.ai/v1/chat/completions', [
+                'model' => 'mistral-tiny',
+                'messages' => [
+                    ['role' => 'user', 'content' => $prompt],
+                ],
+            ]);
+            $content = $response->json()['choices'][0]['message']['content'];
 
-        // Send the prompt to the Mistral API
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $apiKey,
-            'Content-Type' => 'application/json',
-        ])->post('https://api.mistral.ai/v1/chat/completions', [
-            'model' => 'mistral-tiny',
-            'messages' => [
-                ['role' => 'user', 'content' => $prompt],
-            ],
-        ]);
-        $content = $response->json()['choices'][0]['message']['content'];
-        dd($content);
-        /**
-        if ($response->successful()) {
-            $data = $response->json();
+            $this->saveBDD($content, $language);
+        } catch (\Exception $e) {
+            return redirect()->route('knowledge.index');
+        }
+        return redirect()->route('knowledge.index');
+    }
 
+    public function saveBDD($request, $language)
+    {
+        $questions_data = json_decode($request, true);
+        $test_id = Questions::orderBy('test_id', 'desc')->first();
+        if ($test_id == null) {
+            $test_id = 0;
+        }
+        else{
+            $test_id +=1;
+        }
+        foreach ($questions_data as $question) {
+            $question_number = $question['question_number'];
+            $question_text = $question['question_text'];
 
-            // Process the data received from the API
-            return redirect()->back()->with('success', 'Prompt sent successfully!');
-        } else {
-            return redirect()->back()->with('error', 'Error while sending the prompt.');
-        }**/
-
+            $correct_answer = $question['correct_answer'];
+            $answer_id =0;
+            $answer_options = $question['answer_options'];
+            if (is_string($answer_options)) {
+                // Décoder le JSON uniquement si c'est une chaîne
+                $answerOptions = json_decode($answer_options, true);
+            }
+            else{
+                $answerOptions =$answer_options;
+            }
+            foreach ($answerOptions as $letter => $text) {
+                $question = new Questions();
+                $question->test_id= $test_id;
+                $question->question_id= $question_number;
+                $question->question= $question_text ;
+                $question->answer_id= $answer_id;
+                $question->answer= $text;
+                $question->language= $language;
+                if ($letter == $correct_answer) {
+                    $question->IsTrue= True;
+                }
+                else{
+                    $question->IsTrue= False;
+                }
+                $question->save();
+                $answer_id +=1;
+            }
+        }
     }
 }

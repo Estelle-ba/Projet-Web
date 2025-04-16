@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\CommonLife;
-use App\Models\UserSchool;
 use App\Models\comment_common_task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

@@ -1,19 +1,13 @@
-@foreach($tasks as $task)
-    <div class="custom-modal" id="{{$task->task_id}}" tabindex="-1" role="dialog" aria-labelledby="{{$task->task_id}}">
+@foreach($tests as $test)
+    <div class="custom-modal" id="{{$test[0]->test_id}}" tabindex="-1" role="dialog" aria-labelledby="{{$test[0]->test_id}}">
         <div class="modal-dialog " role="document">
             <div class="modal-content" >
                 <div class="modal-header">
-                    <h5 class="flex modal-title">Tâche {{$task->task_id}} : {{$task->title}}</h5>
+                    <h5 class="flex modal-title">Test {{$test[0]->test_id}} : {{$test[0]->language}}</h5>
                 </div>
-                <div class="modal-body">
-                    <h6>{{$task->description}}</h6>
-                </div>
-                <form method ="POST" action="{{route('common-life.modify')}}">
+                <form method ="POST" action="{{route('test.modify')}}">
                     @csrf
                     <div class="card-body flex flex-col gap-5">
-                        <input type="hidden" id="id" name="id" value="{{$task->task_id}}">
-                        <x-forms.input id="title" name="title" type="text" :label="__('Title')" />
-                        <x-forms.input id="description"  name="description" type="text" :label="__('Description')" />
                         <x-forms.dropdown name="language" :label="__('Promotions')">
                             <option>Aucune formation</option>
                             <option value="everybody">Toutes les promotions</option>
@@ -22,7 +16,8 @@
                             @endforeach
                         </x-forms.dropdown>
                         <div class="flex item-center justify-end gap-2.5">
-                            <button class="flex btn btn-outline btn-danger" type="button" onclick="closeModal({{$task->task_id}})">
+                            <input type="hidden" name="id" value="{{$test[0]->test_id}}">
+                            <button class="flex btn btn-outline btn-danger" type="button" onclick="closeModal({{$test[0]->test_id}})">
                                 Fermer
                             </button>
                             <button class="btn btn-primary" type="submit">
@@ -36,3 +31,4 @@
         </div>
     </div>
 @endforeach
+

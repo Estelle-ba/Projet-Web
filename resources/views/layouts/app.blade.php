@@ -11,6 +11,7 @@
     <link href="{{ asset('metronic/vendors/apexcharts/apexcharts.css') }}" rel="stylesheet"/>
     <link href="{{ asset('metronic/vendors/keenicons/styles.bundle.css') }}" rel="stylesheet"/>
     <link href="{{ asset('metronic/css/styles.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('css/custom-css.css') }}" rel="stylesheet"/>
 
 
 </head>
@@ -86,7 +87,7 @@
 <script src="{{ asset('metronic/js/core.bundle.js') }}"></script>
 <script src="{{ asset('metronic/vendors/apexcharts/apexcharts.min.js') }}"></script>
 <script src="{{ asset('metronic/js/widgets/general.js') }}"></script>
-<script src="{{ asset('metronic/js/modal-script.js') }}"></script>
+<script src="{{ asset('js/modal-script.js') }}"></script>
 
 <!-- End of Scripts -->
 </body>

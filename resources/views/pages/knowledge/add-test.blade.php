@@ -33,6 +33,13 @@
                 <option value="Typescript">Typescript</option>
                 <option value="Visual Basic">Visual Basic</option>
             </x-forms.dropdown>
+            <select name="promotion" :label="__('Promotions')">
+                <option>Aucune formation</option>
+                <option value="everybody">Toutes les promotions</option>
+                @foreach($cohorts as $cohort)
+                    <option value="{{$cohort->id}}">{{$cohort->name}}</option>
+                @endforeach
+            </select>
             <x-forms.input name="question" type="number" :label="__('Nombre de questions')"> </x-forms.input>
             <x-forms.input name="answer" type="number" :label="__('Nombre de réponses')"> </x-forms.input>
             <button class="btn btn-primary" type="submit">Generate</button>

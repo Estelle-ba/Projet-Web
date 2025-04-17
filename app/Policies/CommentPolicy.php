@@ -17,10 +17,14 @@ class CommentPolicy
      * Create a new policy instance.
      */
     use HandlesAuthorization;
+
+    //modify_comment check if the user that modify the comment is the same as the owner
     public function modify_Comment($comment){
         $user = Auth::user();
         return $user->id == $comment->user_id;
     }
+
+    //delete_comment check if the user that modify the comment is the same as the owner
     public function delete_Comment($comment){
         $user = Auth::user();
         return $user->id == $comment->user_id;

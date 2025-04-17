@@ -51,7 +51,7 @@
                                     Supprimer
                                 </button>
                             </form>
-                            <button class="btn btn-primary">
+                            <button class="btn btn-primary" onclick="openModal({{$test[0]->test_id}})">
                                 Modifier
                             </button>
                         </div>
@@ -61,4 +61,5 @@
         </div>
     </div>
 </div>
+@include('pages.knowledge.modal-modify-test')
 

@@ -1,5 +1,5 @@
 @foreach($done as $ratting)
-    <div class="modal" id="note{{$ratting->test_id}}" tabindex="-1" role="dialog" aria-labelledby="note{{$ratting->test_id}}">
+    <div class="custom-modal" id="note{{$ratting->test_id}}" tabindex="-1" role="dialog" aria-labelledby="note{{$ratting->test_id}}">
         <div class="modal-dialog " role="document">
             <div class="modal-content" >
                 <div class="modal-header">
@@ -12,6 +12,9 @@
                 <div class="modal-body">
                     <h5 class="flex modal-title">{{$ratting->ratting}} / {{$ratting->total}}</h5>
                 </div>
+                <button class="flex btn btn-outline btn-danger" type="button" onclick="closeModal('note{{$ratting->test_id}}')">
+                    Fermer
+                </button>
             </div>
         </div>
     </div>

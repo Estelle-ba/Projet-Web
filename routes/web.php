@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function () {
         // Knowledge
         Route::get('knowledge', [KnowledgeController::class, 'index'])->name('knowledge.index');
         Route::post('knowledge', [KnowledgeController::class, 'resultTest'])->name('knowledge.result');
+        Route::post('knowledge-modify', [KnowledgeController::class, 'modifyTest'])->name('test.modify');
 
 
         // Groups

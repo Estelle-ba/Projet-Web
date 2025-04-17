@@ -9,11 +9,18 @@ use function Webmozart\Assert\Tests\StaticAnalysis\null;
 
 class AssistantController extends Controller
 {
+    //generateText give a prompt to Gemini API AI to create a QCM based on a programming language
     public function generateText(Request $request)
     {
+        dd($request);
         $question = $request->question;
         $language = $request->select;
         $answer = $request->answer;
+        if($language==null || $answer==null){
+            return redirect()->route('knowledge.index');
+        }
+
+        //Create the prompt with the programming language and the number of answers and questions given
         $prompt = "Génère un questionnaire à choix multiple (QCM) sur le langage de programmation : $language.
         Le questionnaire doit comporter $question questions, réparties en trois catégories de difficulté :
         - 30% de questions simples,
@@ -41,51 +48,66 @@ class AssistantController extends Controller
         ]
 
         N’inclus **aucun texte explicatif**, ni balise Markdown, ni introduction, ni conclusion. Seulement du JSON brut.";
+
+
         $apiKey = env('GEMINI_API_KEY');
-            // Send the prompt to the Mistral API
-            $response = Http::withHeaders([
-                'Content-Type' => 'application/json',
-            ])->post( 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' . $apiKey, [
-                'contents' => [
-                    [
-                        'parts' => [
-                            ['text' => $prompt],
-                        ],
+        // Send the prompt to the GEMINI API
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+        ])->post( 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' . $apiKey, [
+            'contents' => [
+                [
+                    'parts' => [
+                        ['text' => $prompt],
                     ],
                 ],
-            ]);
-            $content = $response['candidates'][0]['content']['parts'][0]['text'];
+            ],
+        ]);
 
-            $this->saveBDD($content, $language);
-            return redirect()->route('knowledge.index');
+        //Take only the content of the response
+        $content = $response['candidates'][0]['content']['parts'][0]['text'];
+
+        //Use this function to save the content in the database
+        $this->saveBDD($content, $language);
+        return redirect()->route('knowledge.index');
     }
 
+    //saveBDD save the response of Gemini API in the database
     public function saveBDD($content, $language)
     {
-        $cleanJson = preg_replace('/^```json\s*/', '', $content);
-        $cleanJson = preg_replace('/\s*```$/', '', $cleanJson);
-        $questions_data = json_decode($cleanJson);
+        //Change the content from string to Json
+        $newJson = preg_replace('/^```json\s*/', '', $content); //Remove the ```json from the content start
+        $newJson = preg_replace('/\s*```$/', '', $newJson); //Remove the ``` from the content rn
+        $questions_data = json_decode($newJson);
 
-        $lastQuestion = Questions::latest('test_id')->first();
-        $test_id = $lastQuestion ? $lastQuestion->test_id + 1 : 0;
+        //Increment the id of the test
+        $lastQuestion = Questions::latest('test_id')->first(); //Take the last test id in the database
+        $test_id = $lastQuestion ? $lastQuestion->test_id + 1 : 0; //If there is no id put 0 otherwise give the last test id +1
+
+        //Browse the list of questions
         foreach ($questions_data as $question) {
 
+            //Save this in data in variable to use them later
             $question_number = $question->question_number;
             $question_text = $question->question_text;
-
             $correct_answer = $question->correct_answer;
 
-            $answer_id =0;
-            $answer_options = $question->answer_options;
+            $answer_id =0;// The answer id will increment
+
+            $answer_options = $question->answer_options;//the list of answer
+
+            //Decodes JSON only if it's a json string
             if (is_string($answer_options)) {
-                // Décoder le JSON uniquement si c'est une chaîne
+
                 $answerOptions = json_decode($answer_options, true);
             }
             else{
                 $answerOptions =$answer_options;
             }
-            foreach ($answerOptions as $letter => $text) {
 
+            //Browse the list of answers
+            foreach ($answerOptions as $letter => $text) {
+                //create a new question to save
                 $question_bdd = new Questions();
                 $question_bdd->test_id= $test_id;
                 $question_bdd->question_id= $question_number;
@@ -93,14 +115,18 @@ class AssistantController extends Controller
                 $question_bdd->answer_id= $answer_id;
                 $question_bdd->answer= $text;
                 $question_bdd->language= $language;
+
+                //Check if it's the correct answer
                 if ($letter == $correct_answer) {
-                    $question_bdd->IsTrue= True;
+                    $question_bdd->IsTrue= True;//If it is IsTrue become true
                 }
                 else{
-                    $question_bdd->IsTrue= False;
+                    $question_bdd->IsTrue= False;//Otherwise IsTrue is false
                 }
-                $question_bdd->save();
-                $answer_id +=1;
+
+                $question_bdd->save();//Save the answer
+
+                $answer_id +=1;// increment the answer id
             }
         }
     }

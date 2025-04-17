@@ -1,5 +1,5 @@
 @foreach($done as $task_done)
-    <div class="modal" id="comment{{$task_done->id}}" tabindex="-1" role="dialog" aria-labelledby="{{$task_done->id}}">
+    <div class="custom-modal" id="comment{{$task_done->id}}" tabindex="-1" role="dialog" aria-labelledby="{{$task_done->id}}">
         <div class="modal-dialog " role="document">
             <div class="modal-content" >
                 <div class="modal-header">

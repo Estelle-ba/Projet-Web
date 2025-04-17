@@ -25,6 +25,10 @@ class AuthServiceProvider extends ServiceProvider
             $roleUser = UserSchool::where('user_id',$user->id)->get()->firstOrFail();
             return $roleUser->role == "admin";
         });
+        Gate::define('isStudent', function ($user) {
+            $roleUser = UserSchool::where('user_id',$user->id)->get()->firstOrFail();
+            return $roleUser->role == "student";
+        });
         Gate::policy(CommonLife::class , CommonLifePolicy::class);
         Gate::policy(comment_common_task::class, CommentPolicy::class);
     }

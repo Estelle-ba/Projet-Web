@@ -12,18 +12,17 @@
             @can('isAdmin')
                 @include('pages.knowledge.view-admin')
             @else
-
+                @include('pages.knowledge.view-student')
             @endcan
         </div>
-
+        @can('isAdmin')
         <div class="lg:col-span-1">
             <div class="card h-full">
-                @can('isAdmin')
-                    @include('pages.knowledge.add-test')
-                @else
 
-                @endcan
+                    @include('pages.knowledge.add-test')
+
             </div>
         </div>
+        @endcan
     </div>
 </x-app-layout>

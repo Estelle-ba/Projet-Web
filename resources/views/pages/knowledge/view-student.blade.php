@@ -7,7 +7,7 @@
                 </h3>
             @else
                 <h3 class="card-title">
-                    Test créés
+                    Test à faire
                 </h3>
             @endif
         </div>
@@ -45,15 +45,15 @@
                             </div>
                         </div>
                         <div class="flex item-center justify-end gap-2.5 flex-wrap">
-                            <form method ="POST" action="">
-                                @csrf
-                                <button class="btn btn-outline btn-danger" type="submit">
-                                    Supprimer
+                            @if(in_array($test[0]->test_id,$tests_done))
+                                <button button class="btn btn-success" onclick="openModal(note{{$test[0]->test_id}})">
+                                    Voir la note
                                 </button>
-                            </form>
-                            <button class="btn btn-primary">
-                                Modifier
-                            </button>
+                            @else
+                                <button class="btn btn-primary" onclick="openModal({{$test[0]->test_id}})">
+                                    Faire le test
+                                </button>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -61,4 +61,5 @@
         </div>
     </div>
 </div>
-
+@include('pages.knowledge.test-replace-pages')
+@include('pages.knowledge.ratting')

@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function () {
 
         // Knowledge
         Route::get('knowledge', [KnowledgeController::class, 'index'])->name('knowledge.index');
+        Route::post('knowledge', [KnowledgeController::class, 'resultTest'])->name('knowledge.result');
 
 
         // Groups
@@ -59,7 +60,6 @@ Route::middleware('auth')->group(function () {
 
         // api.test
         Route::post('/generate-text', [AssistantController::class, 'generateText'])->name('generateText');
-        Route::get('mistral-error', [KnowledgeController::class, 'error'])->name('mistral-error');
     });
 
 });

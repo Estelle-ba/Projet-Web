@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Questions;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
@@ -15,6 +16,10 @@ class KnowledgeController extends Controller
      * @return Factory|View|Application|object
      */
     public function index() {
-        return view('pages.knowledge.index');
+        $tests = Questions::all()->groupBy('test_id');
+        return view('pages.knowledge.index', compact('tests'));
+    }
+    public function error() {
+        return view('pages.knowledge.mistral-error');
     }
 }

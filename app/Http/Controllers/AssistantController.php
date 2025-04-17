@@ -12,9 +12,8 @@ class AssistantController extends Controller
     public function generateText(Request $request)
     {
         $question = $request->question;
-        $language = $request->language;
+        $language = $request->select;
         $answer = $request->answer;
-
         $prompt = "Génère un questionnaire à choix multiple (QCM) sur le langage de programmation : $language.
         Le questionnaire doit comporter $question questions, réparties en trois catégories de difficulté :
         - 30% de questions simples,
@@ -42,44 +41,42 @@ class AssistantController extends Controller
         ]
 
         N’inclus **aucun texte explicatif**, ni balise Markdown, ni introduction, ni conclusion. Seulement du JSON brut.";
-        $apiKey = config(key:'mistral.api_key');
-        try {
+        $apiKey = env('GEMINI_API_KEY');
             // Send the prompt to the Mistral API
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $apiKey,
                 'Content-Type' => 'application/json',
-            ])->post('https://api.mistral.ai/v1/chat/completions', [
-                'model' => 'mistral-tiny',
-                'messages' => [
-                    ['role' => 'user', 'content' => $prompt],
+            ])->post( 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' . $apiKey, [
+                'contents' => [
+                    [
+                        'parts' => [
+                            ['text' => $prompt],
+                        ],
+                    ],
                 ],
             ]);
-            $content = $response->json()['choices'][0]['message']['content'];
+            $content = $response['candidates'][0]['content']['parts'][0]['text'];
 
             $this->saveBDD($content, $language);
-        } catch (\Exception $e) {
             return redirect()->route('knowledge.index');
-        }
-        return redirect()->route('knowledge.index');
     }
 
-    public function saveBDD($request, $language)
+    public function saveBDD($content, $language)
     {
-        $questions_data = json_decode($request, true);
-        $test_id = Questions::orderBy('test_id', 'desc')->first();
-        if ($test_id == null) {
-            $test_id = 0;
-        }
-        else{
-            $test_id +=1;
-        }
-        foreach ($questions_data as $question) {
-            $question_number = $question['question_number'];
-            $question_text = $question['question_text'];
+        $cleanJson = preg_replace('/^```json\s*/', '', $content);
+        $cleanJson = preg_replace('/\s*```$/', '', $cleanJson);
+        $questions_data = json_decode($cleanJson);
 
-            $correct_answer = $question['correct_answer'];
+        $lastQuestion = Questions::latest('test_id')->first();
+        $test_id = $lastQuestion ? $lastQuestion->test_id + 1 : 0;
+        foreach ($questions_data as $question) {
+
+            $question_number = $question->question_number;
+            $question_text = $question->question_text;
+
+            $correct_answer = $question->correct_answer;
+
             $answer_id =0;
-            $answer_options = $question['answer_options'];
+            $answer_options = $question->answer_options;
             if (is_string($answer_options)) {
                 // Décoder le JSON uniquement si c'est une chaîne
                 $answerOptions = json_decode($answer_options, true);
@@ -88,20 +85,21 @@ class AssistantController extends Controller
                 $answerOptions =$answer_options;
             }
             foreach ($answerOptions as $letter => $text) {
-                $question = new Questions();
-                $question->test_id= $test_id;
-                $question->question_id= $question_number;
-                $question->question= $question_text ;
-                $question->answer_id= $answer_id;
-                $question->answer= $text;
-                $question->language= $language;
+
+                $question_bdd = new Questions();
+                $question_bdd->test_id= $test_id;
+                $question_bdd->question_id= $question_number;
+                $question_bdd->question= $question_text ;
+                $question_bdd->answer_id= $answer_id;
+                $question_bdd->answer= $text;
+                $question_bdd->language= $language;
                 if ($letter == $correct_answer) {
-                    $question->IsTrue= True;
+                    $question_bdd->IsTrue= True;
                 }
                 else{
-                    $question->IsTrue= False;
+                    $question_bdd->IsTrue= False;
                 }
-                $question->save();
+                $question_bdd->save();
                 $answer_id +=1;
             }
         }

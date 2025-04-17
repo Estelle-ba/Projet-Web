@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function () {
         // Knowledge
         Route::get('knowledge', [KnowledgeController::class, 'index'])->name('knowledge.index');
 
+
         // Groups
         Route::get('groups', [GroupController::class, 'index'])->name('group.index');
 
@@ -57,7 +58,8 @@ Route::middleware('auth')->group(function () {
         Route::post('comment-delete', [CommentTaskController::class, 'deleteComment'])->name('comment-delete')->middleware('can:modify,App\Models\CommentTask');
 
         // api.test
-        Route::post('/generate-text', [AssistantController::class, 'generateText']);
+        Route::post('/generate-text', [AssistantController::class, 'generateText'])->name('generateText');
+        Route::get('mistral-error', [KnowledgeController::class, 'error'])->name('mistral-error');
     });
 
 });

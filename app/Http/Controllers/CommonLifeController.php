@@ -20,11 +20,12 @@ class CommonLifeController extends Controller
     public function index() {
         $user = Auth::user();
         $id = $user->id;
-        $done = comment_common_task::where('user_id',$id)->get();
         $tasks = CommonLife::all();
 
         //If it's a student
         if(Gate::allows('isStudent',$user)){
+            $done = comment_common_task::where('user_id',$id)->get();
+
             //Search for his cohort
             $cohorts = CohortUser::where('user_id',$id)->get()->FirstOrFail();
             $temp=promotion_common_task::where('promotion',$cohorts->cohort_id)->get();
@@ -35,10 +36,12 @@ class CommonLifeController extends Controller
                 $todo[] = $task_todo['task_id'];
             }
         }
+
         //Otherwise get all the cohorts and the task done
         else{
             $cohorts = Cohort::all();
-            $todo = comment_common_task::all();
+            $done = comment_common_task::all();
+            $todo = promotion_common_task::all();
         }
         return view('pages.commonLife.index', compact('tasks','done','cohorts','todo'));
     }
@@ -99,6 +102,11 @@ class CommonLifeController extends Controller
 
         //take the task from the database
         $task = CommonLife::where('task_id',$id)->delete();//delete-it
+
+        //take all the cohort task in the database with this task id
+        $cohort_task = promotion_common_task::where('task_id',$id);
+        $cohort_task->delete();//delete-it
+
         return redirect()->route('common-life.index');
     }
 
@@ -154,6 +162,20 @@ class CommonLifeController extends Controller
                 }
             }
         }
+        return redirect()->route('common-life.index');
+    }
+
+    //delete_cohort delete the cohort task
+    public function delete_cohort(request $request) {
+        $user = Auth::user();
+        //$this->authorize('delete',$user);
+        $task_id = $request->task_id;
+        $id = $request->select;
+
+        //take the cohort_task
+        $cohort_task = promotion_common_task::where('task_id',$task_id)->where('promotion',$id);
+        $cohort_task->delete();//delete-it
+
         return redirect()->route('common-life.index');
     }
 }

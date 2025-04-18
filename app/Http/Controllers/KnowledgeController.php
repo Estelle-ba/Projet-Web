@@ -49,7 +49,7 @@ class KnowledgeController extends Controller
         }
         else{
             $tests_done=Questions::all();
-            $todo=0;
+            $todo=CohortTest::all();
         }
         return view('pages.knowledge.index', compact('tests','tests_done','done','todo','cohorts'));
     }
@@ -123,6 +123,37 @@ class KnowledgeController extends Controller
                 }
             }
         }
+        return redirect()->route('knowledge.index');
+    }
+
+    //This function delete all the test
+    function deleteTest(Request $request){
+        $user = Auth::user();
+
+        $id = $request->id;
+
+        //take all the answer in the database with this test id
+        $test = Questions::where('test_id',$id);
+        $test->delete();//delete-it
+
+        //take all the cohort test in the database with this test id
+        $cohort_test = CohortTest::where('test_id',$id);
+        $cohort_test->delete();//delete-it
+
+        return redirect()->route('knowledge.index');
+    }
+
+    //delete_cohort delete the cohorttest
+    public function delete_cohort(request $request) {
+        $user = Auth::user();
+        //$this->authorize('delete',$user);
+        $test_id = $request->test_id;
+        $id = $request->select;
+
+        //take the cohort_test
+        $cohort_test= CohortTest::where('test_id',$test_id)->where('cohort_id',$id);
+        $cohort_test->delete();//delete-it
+
         return redirect()->route('knowledge.index');
     }
 }

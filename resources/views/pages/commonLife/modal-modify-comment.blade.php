@@ -1,3 +1,4 @@
+{{--Modal to add a comment or remove-it--}}
 @foreach($done as $task_done)
     <div class="custom-modal" id="comment{{$task_done->id}}" tabindex="-1" role="dialog" aria-labelledby="{{$task_done->id}}">
         <div class="modal-dialog " role="document">

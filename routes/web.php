@@ -40,6 +40,8 @@ Route::middleware('auth')->group(function () {
         Route::get('knowledge', [KnowledgeController::class, 'index'])->name('knowledge.index');
         Route::post('knowledge', [KnowledgeController::class, 'resultTest'])->name('knowledge.result');
         Route::post('knowledge-modify', [KnowledgeController::class, 'modifyTest'])->name('test.modify');
+        Route::post('knowledge-delete', [KnowledgeController::class, 'deleteTest'])->name('test.delete');
+        Route::post('knowledge-cohort-modify', [KnowledgeController::class, 'delete_cohort'])->name('test.cohort-delete');
 
 
         // Groups
@@ -53,6 +55,7 @@ Route::middleware('auth')->group(function () {
         Route::post('common-life-create', [CommonLifeController::class, 'create'])->name('common-life.create')->middleware('can:create,App\Models\CommonLife');
         Route::post('common-life-delete', [CommonLifeController::class, 'delete'])->name('common-life.delete');
         Route::post('common-life-modify', [CommonLifeController::class, 'modify_task'])->name('common-life.modify');
+        Route::post('common-life-cohort-modify', [CommonLifeController::class, 'delete_cohort'])->name('common-life.cohort-delete');
 
         //Comment Common Life
         Route::post('comment-add', [CommentTaskController::class, 'addComment'])->name('comment-add');

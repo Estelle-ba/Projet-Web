@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cohort;
+use App\Models\CohortTest;
+use App\Models\promotion_common_task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\Questions;
@@ -12,10 +15,10 @@ class AssistantController extends Controller
     //generateText give a prompt to Gemini API AI to create a QCM based on a programming language
     public function generateText(Request $request)
     {
-        dd($request);
         $question = $request->question;
-        $language = $request->select;
+        $language = $request->language;
         $answer = $request->answer;
+        $cohorts_id = $request->cohort;
         if($language==null || $answer==null){
             return redirect()->route('knowledge.index');
         }
@@ -68,12 +71,12 @@ class AssistantController extends Controller
         $content = $response['candidates'][0]['content']['parts'][0]['text'];
 
         //Use this function to save the content in the database
-        $this->saveBDD($content, $language);
+        $this->saveBDD($content, $language, $cohorts_id);
         return redirect()->route('knowledge.index');
     }
 
     //saveBDD save the response of Gemini API in the database
-    public function saveBDD($content, $language)
+    public function saveBDD($content, $language, $cohort_id)
     {
         //Change the content from string to Json
         $newJson = preg_replace('/^```json\s*/', '', $content); //Remove the ```json from the content start
@@ -128,6 +131,26 @@ class AssistantController extends Controller
 
                 $answer_id +=1;// increment the answer id
             }
+
+
+        }
+        if($cohort_id == "everybody") {
+            $cohorts = Cohort::all();
+            //Browse the cohorts
+            foreach($cohorts as $cohort) {
+                //create a new cohort
+                $cohort_test = new CohortTest();
+                $cohort_test->cohort_id = $cohort->id;
+                $cohort_test->test_id = $test_id;
+                $cohort_test->save();//Save it into the database
+            }
+        }
+        else{
+            //create a new cohort
+            $cohort_test = new CohortTest();
+            $cohort_test->cohort_id = $cohort_id;
+            $cohort_test->test_id = $test_id;
+            $cohort_test->save();//Save it into the database
         }
     }
 }

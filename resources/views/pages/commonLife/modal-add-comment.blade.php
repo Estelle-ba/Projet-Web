@@ -1,3 +1,4 @@
+{{--The modal put the common task to finish and the user can add a comment--}}
 @foreach($tasks as $task)
     <div class="custom-modal" id="done{{$task->task_id}}" tabindex="-1" role="dialog" aria-labelledby="{{$task->task_id}}">
         <div class="modal-dialog " role="document">

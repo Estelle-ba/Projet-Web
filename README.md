@@ -24,7 +24,7 @@ Exécutez les étapes ci-dessous pour lancer le projet en local :
 ### 1. Cloner le dépôt
 
 ```bash
-git clone https://m_thibaud@bitbucket.org/m_thibaud/projet-web-2025.git
+git clone https://github.com/Estelle-ba/Projet-Web.git
 cd coding-tool-box
 cp .env .env
 ```
@@ -98,3 +98,7 @@ npm run dev
 - 🧠 Génération automatique de QCM par langage sélectionné
 - ✅ Système de Kanban pour les rétrospectives
 - 📈 Statistiques d’usage et suivi pédagogique
+
+## Backlog 2
+### Toutes les stories sont faites
+#### Common Life

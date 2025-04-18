@@ -5,6 +5,7 @@
                 Ajouter une tache commune
             </h3>
         </div>
+        {{--This form add a common life--}}
         <form method ="POST" action="{{route('common-life.create')}}">
             @csrf
             <div class="card-body flex flex-col gap-5">

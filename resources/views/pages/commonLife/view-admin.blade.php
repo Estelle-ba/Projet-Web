@@ -1,6 +1,7 @@
 <div class="grid" >
     <div class="card card-grid h-full min-w-full">
         <div class="card-header">
+            {{--If there're task to do--}}
             @if(count($tasks) == 0)
                 <h3 class="card-title">
                     Aucune tâche
@@ -20,6 +21,7 @@
                                 <div class="border border-brand-clarity rounded-lg">
                                     <div class="flex items-center justify-center border-b border-b-brand-clarity bg-brand-light rounded-t-lg">
                                         <span class="text-3xs text-brand fw-medium p-1.5">
+                                            {{--Show the month when the task was created--}}
                                             @php
                                                 $time = $task->created_at;
                                                 $dateShow = $time->format("M");
@@ -29,6 +31,7 @@
                                     </div>
                                     <div class="flex items-center justify-center size-9">
                                         <span class="fw-semibold text-gray-900 text-md tracking-tight">
+                                            {{--Show the day when the task was created--}}
                                             @php
                                                 $time = $task->created_at;
                                                 $dateShow = $time->format("d");
@@ -48,6 +51,7 @@
                             </div>
                         </div>
                         <div class="flex item-center justify-end gap-2.5 flex-wrap">
+                            {{--Delete the task--}}
                             <form method ="POST" action="{{route('common-life.delete')}}">
                                 @csrf
                                 <input type="hidden" id="id" name="id" value="{{$task->task_id}}">
@@ -55,6 +59,7 @@
                                     Supprimer
                                 </button>
                             </form>
+                            {{--Open the modal to moditfy the task--}}
                             <button class="btn btn-primary" onclick="openModal({{$task->task_id}})">
                                 Modifier
                             </button>
